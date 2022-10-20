@@ -14,7 +14,10 @@ jobs:
           - v1-dependencies-{{ checksum "requirements.txt" }}
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
-
+      - run:
+          name: Start docker
+          command: |
+            systemctl start docker
       - run:
           name: install dependencies
           command: |
@@ -25,7 +28,7 @@ jobs:
             # pip install -r requirements.txt
             # sudo wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64
             # sudo chmod +x /bin/hadolint
-
+          
             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
             unzip awscliv2.zip
             sudo ./aws/install
