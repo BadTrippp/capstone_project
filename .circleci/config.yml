@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  build-and-push-image:
+  build-and-push:
     docker:
       - image: circleci/python:3.6.7-stretch
     working_directory: ~/repo
