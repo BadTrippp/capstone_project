@@ -1,6 +1,15 @@
 version: 2
+
+orbs:
+  slack: circleci/slack@4.1
+
+parameters:
+  workflow_id:
+    type: string
+    default: '${CIRCLE_WORKFLOW_ID:0:7}'
+
 jobs:
-  build-and-push:
+  build:
     docker:
       - image: circleci/python:3.6.7-stretch
     working_directory: ~/repo
