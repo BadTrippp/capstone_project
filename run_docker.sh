@@ -5,6 +5,7 @@
 # Step 1:
 # Build image and add a descriptive tag
 echo "========= CLEAR OLD ENVIRONMENT ========="
+docker stop capstone_project
 docker rm capstone_project
 docker rmi capstone_project
 echo "========= DONE ========="
@@ -22,3 +23,5 @@ echo "."
 echo "========= LIST IMAGES ========="
 docker image ls
 echo "========= DONE ========="
+
+docker run --name capstone_project -dp 80:80 capstone_project 
