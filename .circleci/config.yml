@@ -30,7 +30,7 @@ jobs:
             # unzip awscliv2.zip
             # sudo ./aws/install
             # aws ecr get-login-password
-            docker --version
+            aws ecr get-login-password --region us-east-1 | docker login --username admin --password-stdin 294899139296.dkr.ecr.us-east-1.amazonaws.com
 
 
 
