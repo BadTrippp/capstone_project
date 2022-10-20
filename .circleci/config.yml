@@ -16,11 +16,11 @@ jobs:
           - v1-dependencies-
       - setup_remote_docker:
           docker_layer_caching: true
-          
+
       - run:
           name: Start docker
           command: |
-            systemctl start docker
+            ls -la
       - run:
           name: install dependencies
           command: |
