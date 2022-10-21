@@ -100,8 +100,7 @@ jobs:
             sudo ./aws/install
             python3 -m pip install --user ansible
             # sudo apt-get install ansible tar curl
-            tar 
-            curl
+        
       
       
 workflows:
