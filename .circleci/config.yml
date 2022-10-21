@@ -9,7 +9,7 @@ parameters:
     default: '${CIRCLE_WORKFLOW_ID:0:7}'
 
 jobs:
-  lint-dockerfile:
+  lint-code:
     docker:
       - image: circleci/python:3.6.7-stretch
     working_directory: ~/repo
@@ -26,10 +26,7 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: true
 
-      # - run:
-      #     name: Build docker image
-      #     command: |
-      #       ./run_docker.sh
+      
       - run:
           name: install dependencies
           command: |
@@ -39,10 +36,6 @@ jobs:
             pip install -r requirements.txt
             sudo wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64
             sudo chmod +x /bin/hadolint
-          
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            unzip awscliv2.zip
-            sudo ./aws/install
 
       - save_cache:
           paths:
@@ -61,8 +54,38 @@ jobs:
           command: |
             . venv/bin/activate
             make lint
-      # - run: 
-      #     name: Push image to ECR
-      #     command: |
-      #       ./upload_docker.sh
             
+  
+  build-and-push-image:
+    docker:
+      - image: circleci/python:3.6.7-stretch
+    working_directory: ~/repo
+    
+    steps:
+      - checkout
+
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: install AWS CLI
+          command: |
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
+      - run:
+          name: Build docker image
+          command: |
+            ./run_docker.sh
+      - run: 
+          name: Push image to ECR
+          command: |
+            ./upload_docker.sh
+
+      
+workflows:
+  default:
+    jobs:
+      - lint-code
+      - build-and-push-image:
+         requires: [lint-code]
+
