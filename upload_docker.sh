@@ -11,16 +11,10 @@ dockerpath=294899139296.dkr.ecr.us-east-1.amazonaws.com/capstone_project
 # Step 2:  
 # Authenticate & tag
 echo "Docker ID and Image: $dockerpath"
-docker login registry-1.docker.io
-docker tag project4 $dockerpath
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $dockerpath
+docker tag capstone_project $dockerpath
+docker tag capstone_project:latest $dockerpath:latest
 
 # Step 3:
 # Push image to a docker repository
-docker push badtrip/udacity-project4
-
-aws ecr get-login-password --region us-east-1 | docker login --username admin --password-stdin 294899139296.dkr.ecr.us-east-1.amazonaws.com
-
-echo $(aws ecr get-login-password)|docker login --password-stdin --username admin 294899139296.dkr.ecr.us-east-1.amazonaws.com
-
-export password=$(aws ecr get-login-password --region us-east-1)
-docker login --username admin --password-stdin 294899139296.dkr.ecr.us-east-1.amazonaws.com
+docker push $dockerpath:latest

@@ -29,7 +29,7 @@ jobs:
       - run:
           name: Build docker image
           command: |
-            docker build --tag=capstone_project .
+            ./run_docker.sh
       - run:
           name: install dependencies
           command: |
@@ -64,7 +64,7 @@ jobs:
       - run: 
           name: Push image to ECR
           command: |
-            aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 294899139296.dkr.ecr.us-east-1.amazonaws.com
-            docker tag capstone_project:latest 294899139296.dkr.ecr.us-east-1.amazonaws.com/capstone_project:latest
-            docker push 294899139296.dkr.ecr.us-east-1.amazonaws.com/capstone_project:latest
-
+            ./upload_docker.sh
+            
+            
+  ssss
