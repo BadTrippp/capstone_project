@@ -24,4 +24,3 @@ echo "========= LIST IMAGES ========="
 docker image ls
 echo "========= DONE ========="
 
-docker run --name capstone_project -dp 80:80 capstone_project 
