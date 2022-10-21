@@ -9,7 +9,7 @@ parameters:
     default: '${CIRCLE_WORKFLOW_ID:0:7}'
 
 jobs:
-  build:
+  lint-dockerfile:
     docker:
       - image: circleci/python:3.6.7-stretch
     working_directory: ~/repo
@@ -26,10 +26,10 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: true
 
-      - run:
-          name: Build docker image
-          command: |
-            ./run_docker.sh
+      # - run:
+      #     name: Build docker image
+      #     command: |
+      #       ./run_docker.sh
       - run:
           name: install dependencies
           command: |
@@ -61,8 +61,8 @@ jobs:
           command: |
             . venv/bin/activate
             make lint
-      - run: 
-          name: Push image to ECR
-          command: |
-            ./upload_docker.sh
+      # - run: 
+      #     name: Push image to ECR
+      #     command: |
+      #       ./upload_docker.sh
             
