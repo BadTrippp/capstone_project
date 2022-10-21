@@ -66,5 +66,3 @@ jobs:
           command: |
             ./upload_docker.sh
             
-            
-  ssss
