@@ -93,14 +93,18 @@ jobs:
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
       - run:
-          name: install AWS CLI
+          name: install Dependencies
           command: |
-            tar
-            # curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            # unzip awscliv2.zip
-            # sudo ./aws/install
-            # sudo pip install --upgrade pip
-            # python3 -m pip install --user ansible
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
+            sudo pip install --upgrade pip
+            python3 -m pip install --user ansible
+
+      - run:
+          name: deploy
+          command: |
+
             
         
       
