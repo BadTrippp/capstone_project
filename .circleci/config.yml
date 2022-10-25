@@ -9,7 +9,7 @@ parameters:
     default: '${CIRCLE_WORKFLOW_ID:0:7}'
 
 jobs:
-  lint-code:
+  lint-code: 
     docker:
       - image: circleci/python:3.6.7-stretch
     working_directory: ~/repo
@@ -80,7 +80,7 @@ jobs:
           command: |
             ./upload_docker.sh
 
-  deploy-infrastructure:
+  build-infrastructure:
     docker:
       - image: circleci/python:3.6.7-stretch
     working_directory: ~/repo
@@ -112,9 +112,9 @@ jobs:
 workflows:
   default:
     jobs:
-      # - lint-code
+      - lint-code
       # - build-and-push-image:
       #    requires: [lint-code]
-      - deploy-infrastructure
-        #  requires: [build-and-push-image]
+      # - build-infrastructure
+      #    requires: [build-and-push-image]
 
