@@ -121,6 +121,10 @@ jobs:
           name: Create deployment template
           command: |
             pwd
+            ls 
+            cd deploy
+            ls -la
+            cat deploy.yml
       - kubernetes/create-or-update-resource:
           get-rollout-status: true
           show-kubectl-command: true
