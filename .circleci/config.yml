@@ -115,6 +115,8 @@ jobs:
           kubectl-version: v1.22.0
       - aws-eks/update-kubeconfig-with-authenticator:
           cluster-name: wfawf
+          install-kubectl: true
+          aws-region: us-east-1
       - run:
           command: |
             kubectl get services
