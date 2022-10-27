@@ -160,5 +160,5 @@ workflows:
       #    requires: [lint-code]
       # - build-infrastructure
       - test-cluster:
-          cluster-name: VietNguyen-Capstone-Network
+          cluster-name: VietNguyen-CAPSTONE-EKS-Cluster
       
