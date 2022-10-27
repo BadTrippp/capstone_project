@@ -104,8 +104,9 @@ jobs:
 
   test-cluster:
     docker:
-      - image: circleci/python:3.6.7-stretch
+      - image: 'cimg/python:3.10'
     parameters:
+      cluster-name:
         description: |
           Name of the EKS cluster
         type: string
@@ -113,9 +114,9 @@ jobs:
       - kubernetes/install:
           kubectl-version: v1.22.0
       - aws-eks/update-kubeconfig-with-authenticator:
-          cluster-name: VietNguyen-Capstone-Network
+          cluster-name: << parameters.cluster-name >>
+          aws-region: 
           install-kubectl: true
-          aws-region: us-east-1
       - run:
           command: |
             kubectl get services
@@ -158,4 +159,6 @@ workflows:
       # - build-and-push-image:
       #    requires: [lint-code]
       # - build-infrastructure
-      - test-cluster
+      - test-cluster:
+          cluster-name: VietNguyen-Capstone-Network
+      
