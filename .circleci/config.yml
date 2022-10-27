@@ -1,7 +1,5 @@
 version: 2.1
 
-orbs:
-  slack: circleci/slack@4.1
 
 parameters:
   workflow_id:
@@ -100,9 +98,9 @@ jobs:
           command: |
             ./upload_docker.sh
 
-  deploy-app:
-    docker:
-      - image: 
+  # deploy-app:
+  #   docker:
+  #     - image: 
 
   # build-infrastructure:
   #   docker:
