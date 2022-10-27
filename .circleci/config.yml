@@ -106,7 +106,6 @@ jobs:
     docker:
       - image: circleci/python:3.6.7-stretch
     parameters:
-      cluster-name:
         description: |
           Name of the EKS cluster
         type: string
