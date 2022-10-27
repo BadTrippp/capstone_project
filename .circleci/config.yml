@@ -156,10 +156,10 @@ jobs:
 workflows:
   default:
     jobs:
-      - lint-code
-      - build-and-push-image:
-         requires: [lint-code]
-      # - build-infrastructure
+      # - lint-code
+      # - build-and-push-image:
+      #    requires: [lint-code]
+      # # - build-infrastructure
       - deploy-application:
           cluster-name: VietNguyen-CAPSTONE-EKS-Cluster
       
