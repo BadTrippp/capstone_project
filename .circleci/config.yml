@@ -1,11 +1,110 @@
-version: '2.1'
+version: 2.1
+
 orbs:
-  aws-eks: circleci/aws-eks@<<pipeline.parameters.dev-orb-version>>
-  kubernetes: circleci/kubernetes@1.3
+  slack: circleci/slack@4.1
+  kubernetes: circleci/kubernetes@1.3.1
+  aws-eks: circleci/aws-eks@2.2.0
+
+parameters:
+  workflow_id:
+    type: string
+    default: '${CIRCLE_WORKFLOW_ID:0:7}'
+
+commands:
+  aws-ready:
+    description: Install AWS CLI
+    steps:
+      - run:
+          name: Install AWS CLI
+          command: |
+            sudo apt-get update && sudo apt-get install -yy less
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
+            sudo pip install --upgrade pip
+
+  destroy-environment:
+    description: Destroy NETWORK & EKS CLUSTER cloudformation 
+    parameters:
+      when:
+        type: string   
+    steps:
+      - run:
+          name: Destroy environments
+          when: on_fail
+          command: |
+            aws cloudformation delete-stack \
+            --stack-name VietNguyen-Capstone-Network-<< pipeline.parameters.workflow_id >>
+  
+
 jobs:
+  lint-code: 
+    docker:
+      - image: circleci/python:3.6.7-stretch
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "requirements.txt" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+
+      - run:
+          name: install dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            make install
+            pip install -r requirements.txt
+            sudo wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64
+            sudo chmod +x /bin/hadolint
+            
+
+      - save_cache:
+          paths:
+            - ./venv
+          key: v1-dependencies-{{ checksum "requirements.txt" }}
+        
+      # run tests!
+      - run:
+          name: run tests
+          command: |
+            . venv/bin/activate
+            make test
+      # run lints!
+      - run:
+          name: run lint
+          command: |
+            . venv/bin/activate
+            make lint
+            
+  
+  build-and-push-image:
+    docker:
+      - image: circleci/python:3.6.7-stretch
+    working_directory: ~/repo
+    
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - aws-ready
+      - run:
+          name: Build docker image
+          command: |
+            ./run_docker.sh
+      - run: 
+          name: Push image to ECR
+          command: |
+            ./upload_docker.sh
+
   test-cluster:
     docker:
-      - image: 'cimg/python:3.10'
+      - image: circleci/python:3.6.7-stretch
     parameters:
       cluster-name:
         description: |
@@ -15,21 +114,49 @@ jobs:
       - kubernetes/install:
           kubectl-version: v1.22.0
       - aws-eks/update-kubeconfig-with-authenticator:
-          cluster-name: << parameters.cluster-name >>
+          cluster-name: VietNguyen-Capstone-Network
+          install-kubectl: true
+          aws-region: us-east-1
       - run:
           command: |
             kubectl get services
           name: Test cluster
+
+  # deploy-app:
+  #   docker: 
+  #     - image: 
+
+  # build-infrastructure:
+  #   docker:
+  #     - image: circleci/python:3.6.7-stretch
+  #   working_directory: ~/repo
+    
+  #   steps:
+  #     - checkout
+  #     - restore_cache:
+  #         keys:
+  #         - v1-dependencies-{{ checksum "requirements.txt" }}
+  #         # fallback to using the latest cache if no exact match is found
+  #         - v1-dependencies-
+  #     - aws-ready
+
+  #     - run:
+  #         name: Build Infrastructure
+  #         command: |
+  #           cd ./cloudformation/
+  #           sh create.sh VietNguyen-Capstone-Network-<< pipeline.parameters.workflow_id >> infrastructure.yml params-infra.json
+
+  #     - destroy-environment:
+  #         when: on_fail 
+
+  
+
+      
 workflows:
-  deployment:
-    jobs: 
-      - aws-eks/create-cluster:
-          cluster-name: my-eks-demo
-      - test-cluster:
-          cluster-name: my-eks-demo
-          requires:
-            - aws-eks/create-cluster
-      - aws-eks/delete-cluster:
-          cluster-name: my-eks-demo
-          requires:
-            - test-cluster
+  default:
+    jobs:
+      # - lint-code
+      # - build-and-push-image:
+      #    requires: [lint-code]
+      # - build-infrastructure
+      - test-cluster
