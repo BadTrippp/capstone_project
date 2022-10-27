@@ -22,7 +22,7 @@ jobs:
           name: Test cluster
 workflows:
   deployment:
-    jobs:
+    jobs: 
       - aws-eks/create-cluster:
           cluster-name: my-eks-demo
       - test-cluster:
