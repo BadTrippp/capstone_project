@@ -20,6 +20,18 @@ commands:
             sudo ./aws/install
             sudo pip install --upgrade pip
 
+  destroy-environment:
+    description: Destroy NETWORK & EKS CLUSTER cloudformation 
+    parameters:
+      when:
+        type: string   
+    steps:
+      - run:
+          name: Destroy environments
+          when: on_fail
+          command: |
+            aws cloudformation delete-stack \
+            --stack-name VietNguyen-Capstone-Network
   
 
 jobs:
@@ -75,7 +87,6 @@ jobs:
     
     steps:
       - checkout
-
       - setup_remote_docker:
           docker_layer_caching: true
       - aws-ready
@@ -105,9 +116,15 @@ jobs:
       - run:
           name: Build Infrastructure
           command: |
-            sh ./cloudformation/create.sh VietNguyen-Capstone-Network network-infra.yml network-params.json
-            
-        
+            sh ./cloudformation/create.sh VietNguyen-Capstone-Network infrastructure.yml params-infra.json
+      
+      - run:
+          name: Build Infrastructure
+          command: |
+            exit 1
+
+      - destroy-environment:
+          when: on_fail
       
       
 workflows:
@@ -117,5 +134,3 @@ workflows:
       # - build-and-push-image:
       #    requires: [lint-code]
       - build-infrastructure
-      #    requires: [build-and-push-image]
-
