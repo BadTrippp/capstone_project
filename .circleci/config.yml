@@ -116,6 +116,7 @@ jobs:
       - run:
           name: Build Infrastructure
           command: |
+            sudo apt-get update && sudo apt-get install -yy less
             cd ./cloudformation/
             sh create.sh VietNguyen-Capstone-Network infrastructure.yml params-infra.json
     
