@@ -11,17 +11,6 @@ parameters:
     default: '${CIRCLE_WORKFLOW_ID:0:7}'
 
 commands:
-  aws-ready:
-    description: Install AWS CLI
-    steps:
-      - run:
-          name: Install AWS CLI
-          command: |
-            sudo apt-get update && sudo apt-get install -yy less
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            unzip awscliv2.zip
-            sudo ./aws/install
-            sudo pip install --upgrade pip
 
   destroy-environment:
     description: Destroy NETWORK & EKS CLUSTER cloudformation 
@@ -92,7 +81,6 @@ jobs:
       - checkout
       - setup_remote_docker:
           docker_layer_caching: true
-      - aws-ready
       - run:
           name: Build docker image
           command: |
@@ -115,7 +103,7 @@ jobs:
           kubectl-version: v1.22.0
       - aws-eks/update-kubeconfig-with-authenticator:
           cluster-name: << parameters.cluster-name >>
-          aws-region: 
+          aws-region: us-east-1
           install-kubectl: true
       - run:
           command: |
@@ -155,9 +143,9 @@ jobs:
 workflows:
   default:
     jobs:
-      # - lint-code
-      # - build-and-push-image:
-      #    requires: [lint-code]
+      - lint-code
+      - build-and-push-image:
+         requires: [lint-code]
       # - build-infrastructure
       - test-cluster:
           cluster-name: VietNguyen-CAPSTONE-EKS-Cluster
