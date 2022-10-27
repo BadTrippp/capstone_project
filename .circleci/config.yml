@@ -116,10 +116,7 @@ jobs:
       - run:
           name: Build Infrastructure
           command: |
-            pwd
-            ls
             cd ./cloudformation/
-            ls
             sh create.sh VietNguyen-Capstone-Network infrastructure.yml params-infra.json
     
 
