@@ -117,6 +117,10 @@ jobs:
           cluster-name: << parameters.cluster-name >>
           aws-region: us-east-1
           install-kubectl: true
+      - run:
+          name: Create deployment template
+          command: |
+            pwd
       - kubernetes/create-or-update-resource:
           get-rollout-status: true
           show-kubectl-command: true
