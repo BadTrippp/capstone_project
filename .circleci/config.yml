@@ -1,8 +1,5 @@
 version: 2.1
 
-orbs:
-  slack: circleci/slack@4.1
-
 parameters:
   workflow_id:
     type: string
@@ -99,6 +96,10 @@ jobs:
           name: Push image to ECR
           command: |
             ./upload_docker.sh
+
+  deploy-app:
+    docker:
+      - image: 
 
   # build-infrastructure:
   #   docker:
