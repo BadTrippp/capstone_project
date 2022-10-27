@@ -116,12 +116,9 @@ jobs:
       - run:
           name: Build Infrastructure
           command: |
-            sh ./cloudformation/create.sh VietNguyen-Capstone-Network infrastructure.yml params-infra.json
-      
-      - run:
-          name: Build Infrastructure
-          command: |
-            exit 1
+            cd ./cloudformation/
+            sh create.sh VietNguyen-Capstone-Network infrastructure.yml params-infra.json
+    
 
       - destroy-environment:
           when: on_fail
