@@ -121,7 +121,6 @@ jobs:
           get-rollout-status: true
           show-kubectl-command: true
           resource-file-path: deploy/deploy.yml
-      
 
   # deploy-app:
   #   docker: 
