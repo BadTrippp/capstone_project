@@ -119,16 +119,17 @@ jobs:
           command: |
             cd ./cloudformation/
             sh create.sh VietNguyen-Capstone-Network-<< pipeline.parameters.workflow_id >> infrastructure.yml params-infra.json
-    
 
       - destroy-environment:
-          when: on_fail
-       
+          when: on_fail 
+
+  
+
       
 workflows:
   default:
     jobs:
-      # - lint-code
-      # - build-and-push-image:
-      #    requires: [lint-code]
+      - lint-code
+      - build-and-push-image:
+         requires: [lint-code]
       - build-infrastructure
