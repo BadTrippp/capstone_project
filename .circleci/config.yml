@@ -118,14 +118,6 @@ jobs:
           cluster-name: << parameters.cluster-name >>
           aws-region: us-east-1
           install-kubectl: true
-      - run:
-          name: Create deployment template
-          command: |
-            pwd
-            ls 
-            cd deploy
-            ls -la
-            cat deploy.yml
       - kubernetes/create-or-update-resource:
           show-kubectl-command: true
           resource-file-path: deploy/deploy.yml
@@ -163,10 +155,10 @@ jobs:
 workflows:
   default:
     jobs:
-      # - lint-code
-      # - build-and-push-image:
-      #    requires: [lint-code]
-      # # - build-infrastructure
+      - lint-code
+      - build-and-push-image:
+         requires: [lint-code]
+      # - build-infrastructure
       - deploy-application:
           cluster-name: VietNguyen-CAPSTONE-EKS-Cluster
       
