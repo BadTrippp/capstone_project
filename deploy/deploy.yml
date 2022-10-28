@@ -16,7 +16,7 @@ spec:
         app: capstoneapp
     spec:
       containers:
-        - name: nginx
+        - name: capstone-project
           image: 294899139296.dkr.ecr.us-east-1.amazonaws.com/capstone_project:latest
           ports: 
             - containerPort: 80

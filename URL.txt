@@ -1,0 +1,5 @@
+GITHUB:
+https://github.com/BadTrippp/capstone_project
+
+APP:
+http://ad5216ba2828c4a1f8ea28ead66dedf7-437145590.us-east-1.elb.amazonaws.com/
