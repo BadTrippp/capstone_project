@@ -160,5 +160,6 @@ workflows:
          requires: [lint-code]
       # - build-infrastructure
       - deploy-application:
-          cluster-name: VietNguyen-CAPSTONE-EKS-Cluster
+         requires: [build-and-push-image]
+         cluster-name: VietNguyen-CAPSTONE-EKS-Cluster
       
